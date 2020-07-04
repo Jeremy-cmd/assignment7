@@ -1,12 +1,15 @@
 import React, {Component} from 'react';
 import axios from 'axios';
+import { Button, Table, NavLink, InputGroup, FormControl, Jumbotron} from 'react-bootstrap';
 
 class Debits extends Component{
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
-            data: []
+            data: [],
+            description: "",
+            amount: 0
         };
 
     }
@@ -35,28 +38,19 @@ class Debits extends Component{
 
      }
 
-    getData = async () => {
+   descriptionChange = (event) => {
 
-           let API = 'https://moj-api.herokuapp.com/debits';
+       console.log(event.target.value);
+        this.setState({description: event.target.value})
 
-           try{
-               let response = await axios.get(API).data;
-               console.log("this is the response " + response);
-               let a  = JSON.stringify(response);
-               let x = [];
-               x.push(JSON.parse(a));
-               this.setState({data: x});
+   }
 
+   debitAmountChange = (event) => {
+       console.log(event.target.value);
 
-           }catch (e) {
-               console.log(e.error);
+        this.setState({amount: parseInt(event.target.value)})
 
-           }
-
-
-
-
-    }
+   }
 
     showData = () => {
 
@@ -91,6 +85,20 @@ class Debits extends Component{
         return (
             <div>
                 <h1>Debits</h1>
+
+                <form>
+
+                    <div id="input" className="form-group row">
+                        <label htmlFor="inputPassword" className="col-sm-2 col-form-label"></label>
+                        <div className="col-sm-10">
+                            <input type="text" className="form-control" id="inputPassword" placeholder="Add Debit Description"
+                                   onChange={this.descriptionChange}/>
+                            <input type="text" className="form-control" id="inputPassword" placeholder="Add Debit Amount"
+                            onChange={this.debitAmountChange}/>
+                            <Button variant="primary" >Submit</Button>
+                        </div>
+                    </div>
+                </form>
 
                 <table>
                     <tbody>
