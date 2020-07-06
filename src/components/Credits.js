@@ -9,9 +9,13 @@ class Credits extends Component{
     constructor(props) {
         super(props);
         this.state = {
+            //data to store api data
             data: [],
+            //data for new debits added
             newData: [],
+            //description for debit added
             description: "",
+            //amount for new debit added
             amount: 0,
             notNumber: false,
             creditAmount: 0,
@@ -25,7 +29,7 @@ class Credits extends Component{
 
     componentDidMount() {
 
-        // this.getData();
+        // api call to get data
         let API = 'https://moj-api.herokuapp.com/credits';
         fetch(API).then((response) => {
             if(response.status === 404){
@@ -35,9 +39,11 @@ class Credits extends Component{
 
         }).then((data) => {
 
+
             let creditsData = JSON.stringify(data);
             console.log(creditsData);
 
+            // turn data into JSON format
             this.setState({data: JSON.parse(creditsData) });
         }).catch((error) => {
             console.log('Error', error);
@@ -47,6 +53,7 @@ class Credits extends Component{
 
     descriptionChange = (event) => {
 
+       //store value when text is written
         console.log(event.target.value);
         this.setState({description: event.target.value});
 
@@ -55,18 +62,23 @@ class Credits extends Component{
     creditAmountChange = (event) => {
         console.log(event.target.value);
         let x = event.target.value;
+
+        //if the value is not a number then dont store it
         if(isNaN(x)) {
             this.setState({notNumber: true});
             return;
 
         }
         this.setState({notNumber: false});
+        //store amount
         this.setState({amount: parseInt(event.target.value)});
 
     }
 
     addCredit = () => {
 
+
+       //change state when credit is added
         this.setState((prevState, props) => {
             let newCredit = [];
             let currentTime = new Date();
@@ -77,6 +89,7 @@ class Credits extends Component{
                 newCredit.push(this.state.newData[i]);
             }
 
+            //add html with new data
             if(!this.state.notNumber) {
                 newCredit.push(
                     <th>{this.state.description}</th>,
@@ -101,6 +114,7 @@ class Credits extends Component{
         let table = [];
 
 
+        //data to be viewed in html
         for(let i=0; i<this.state.data.length; i++){
             table.push(
                 <th>{this.state.data[i].description}</th>,
@@ -134,6 +148,7 @@ class Credits extends Component{
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="mr-auto">
 
+                            {/*link for home*/}
                             <Nav.Link>
                                 <Link to={{
                                     pathname: "/",
@@ -144,10 +159,12 @@ class Credits extends Component{
 
                             </Nav.Link>
 
+                            {/*link for debits*/}
                             <Nav.Link href="#link">
                                 <Link to="/Debits">Debits</Link>
                             </Nav.Link>
 
+                            {/*link for user profile*/}
                             <Nav.Link>
                                 <Link to="/UserProfile">UserProfile</Link>
                             </Nav.Link>
@@ -158,8 +175,10 @@ class Credits extends Component{
 
                         </Nav>
                         <Form inline>
+                            {/*onchange when data is written*/}
                             <FormControl type="text" placeholder="Credit Description" className="mr-sm-2" onChange={this.descriptionChange} />
                             <FormControl type="text" placeholder="Credit Amount" className="mr-sm-2" onChange={this.creditAmountChange} />
+                            {/*add credit when data is pressed*/}
                             <Button variant="outline-success" onClick={this.addCredit}>Submit</Button>
                         </Form>
                     </Navbar.Collapse>
@@ -168,6 +187,7 @@ class Credits extends Component{
 
                 <table className="table-responsive-sm table-bordered table-hover d-sm-table  table-striped dataTable">
                     <tbody>
+                    {/*dhow data from api call*/}
                     {this.showData()}
 
 

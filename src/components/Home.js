@@ -15,10 +15,12 @@ class Home extends Component {
                     <Nav className="mr-auto">
 
 
+                        {/*link to debits page*/}
                         <Nav.Link>
                             <Link to="/Debits">Debits</Link>
                         </Nav.Link>
 
+                        {/*link to credits page*/}
                         <Nav.Link href="#link">
                             <Link to="/Credits">Credits</Link>
                         </Nav.Link>
