@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import { Button, Table, NavLink, InputGroup, FormControl, Jumbotron} from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.css';
+import { Button, Table, Nav, Navbar, NavDropdown,  FormText, Form, NavLink, InputGroup, FormControl, Jumbotron} from 'react-bootstrap';
+import {Link} from "react-router-dom";
+
 
 class Debits extends Component{
 
@@ -8,8 +11,13 @@ class Debits extends Component{
         super(props);
         this.state = {
             data: [],
+            newData: [],
             description: "",
-            amount: 0
+            amount: 0,
+            notNumber: false,
+            debitAmount: 0,
+            accountBalance: this.props.accountBalance,
+            money: 0
         };
 
     }
@@ -41,14 +49,50 @@ class Debits extends Component{
    descriptionChange = (event) => {
 
        console.log(event.target.value);
-        this.setState({description: event.target.value})
+        this.setState({description: event.target.value});
 
    }
 
    debitAmountChange = (event) => {
        console.log(event.target.value);
+        let x = event.target.value;
+        if(isNaN(x)) {
+            this.setState({notNumber: true});
+            return;
 
-        this.setState({amount: parseInt(event.target.value)})
+        }
+        this.setState({notNumber: false});
+        this.setState({amount: parseInt(event.target.value)});
+
+   }
+
+   addDebit = () => {
+
+       this.setState((prevState, props) => {
+           let newDebit = [];
+           let currentTime = new Date();
+           currentTime = currentTime.toString();
+
+
+           for(let i=0; i<this.state.newData.length; i++){
+               newDebit.push(this.state.newData[i]);
+           }
+
+           if(!this.state.notNumber) {
+               newDebit.push(
+                   <th>{this.state.description}</th>,
+                   <tr>
+                       <p> Amount: {this.state.amount} </p>
+                       <p> Date: {currentTime}</p>
+                   </tr>
+               )
+           }
+           let x = this.state.amount;
+           let currentMoney = this.state.money;
+           currentMoney += x;
+                return {newData: newDebit, money:currentMoney};
+
+       });
 
    }
 
@@ -69,12 +113,12 @@ class Debits extends Component{
 
             }
 
+            for(let i=0; i<this.state.newData.length; i++){
+                table.push(this.state.newData[i]);
+            }
+
+
             return table;
-
-
-
-
-
 
 
     }
@@ -83,24 +127,48 @@ class Debits extends Component{
     render() {
 
         return (
-            <div>
-                <h1>Debits</h1>
 
-                <form>
+        <div>
 
-                    <div id="input" className="form-group row">
-                        <label htmlFor="inputPassword" className="col-sm-2 col-form-label"></label>
-                        <div className="col-sm-10">
-                            <input type="text" className="form-control" id="inputPassword" placeholder="Add Debit Description"
-                                   onChange={this.descriptionChange}/>
-                            <input type="text" className="form-control" id="inputPassword" placeholder="Add Debit Amount"
-                            onChange={this.debitAmountChange}/>
-                            <Button variant="primary" >Submit</Button>
-                        </div>
-                    </div>
-                </form>
+            <Navbar bg="light" expand="lg">
+                <Navbar.Brand href="#home">Debits</Navbar.Brand>
+                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse id="basic-navbar-nav">
+                    <Nav className="mr-auto">
 
-                <table>
+                        <Nav.Link>
+                            <Link to={{
+                                pathname: "/",
+                                state:{
+                                    debitAmount: this.state.debitAmount
+                                }
+                            }}>Home</Link>
+
+                        </Nav.Link>
+
+                        <Nav.Link href="#link">
+                            <Link to="/Credits">Credits</Link>
+                        </Nav.Link>
+
+                        <Nav.Link>
+                            <Link to="/UserProfile">UserProfile</Link>
+                        </Nav.Link>
+
+                        <Nav.Link>
+                            Account Balance: {this.state.accountBalance}
+                        </Nav.Link>
+
+                    </Nav>
+                    <Form inline>
+                        <FormControl type="text" placeholder="Debit Description" className="mr-sm-2" onChange={this.descriptionChange} />
+                        <FormControl type="text" placeholder="Debit Amount" className="mr-sm-2" onChange={this.debitAmountChange} />
+                        <Button variant="outline-success" onClick={this.addDebit}>Submit</Button>
+                    </Form>
+                </Navbar.Collapse>
+            </Navbar>,
+
+
+                <table className="table-responsive-sm table-bordered table-hover d-sm-table  table-striped dataTable">
                     <tbody>
                     {this.showData()}
 
@@ -108,7 +176,9 @@ class Debits extends Component{
                     </tbody>
                 </table>
 
-            </div>
+        </div>
+
+
         );
     }
 
