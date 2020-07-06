@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import logo from './logo.svg';
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.css';
 import Home from './components/Home';
 import UserProfile from './components/UserProfile';
 import Credits from './components/Credits';
@@ -30,14 +31,22 @@ class App extends Component{
           <UserProfile userName={this.state.currentUser.userName} memberSince={this.state.currentUser.memberSince}  />
       );
 
+      const debitsPage = () => (
+          <Debits accountBalance={this.state.accountBalance}/>
+      );
+
+      const creditsPage = () => (
+          <Credits accountBalance={this.state.accountBalance}/>
+      );
+
 
     return(
         <Router>
             <div>
                 <Route exact path="/" render={HomeComponent}/>
                 <Route exact path="/userProfile" render={UserProfileComponent}/>
-                <Route exact path="/Debits" component={Debits}/>
-                <Route exact path="/Credits" component={Credits}/>
+                <Route exact path="/Debits" render={debitsPage}/>
+                <Route exact path="/Credits" render={creditsPage}/>
 
             </div>
         </Router>

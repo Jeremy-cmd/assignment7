@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import 'bootstrap/dist/css/bootstrap.css';
 
 class UserProfile extends Component {
     render() {
