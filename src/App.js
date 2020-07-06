@@ -27,6 +27,7 @@ class App extends Component{
 
     const HomeComponent = () => (<Home accountBalance={this.state.accountBalance}/>);
 
+    //way to pass props to a component
       const UserProfileComponent = () => (
           <UserProfile userName={this.state.currentUser.userName} memberSince={this.state.currentUser.memberSince}  />
       );
@@ -42,6 +43,7 @@ class App extends Component{
 
     return(
         <Router>
+            {/*paths for each page*/}
             <div>
                 <Route exact path="/" render={HomeComponent}/>
                 <Route exact path="/userProfile" render={UserProfileComponent}/>
